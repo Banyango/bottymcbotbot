@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env*
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Alembic
+alembic/versions/*.pyc
+
+# Brainbox data directory
+*/.brainbox/
+
+# Docker
+*.pid
+*.db
+*.sqlite3
+
+# Misc
+*.swp
+*.bak
+*.tmp
+
+# Node
+node_modules/
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Build
+build/
+dist/
+*.egg-info/
+
