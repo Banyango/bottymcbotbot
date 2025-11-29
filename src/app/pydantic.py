@@ -18,4 +18,3 @@ class PaginatedBaseSchema(BaseSchema):
     total: int = Field(description="Total number of items")
     limit: int = Field(description="Number of items per page")
     offset: int = Field(description="Offset of the current page")
-

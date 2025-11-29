@@ -21,11 +21,15 @@ class MultiModelChatClient(ChatClient):
             tools: List[FunctionCallToolModel],
     ) -> ChatResponse:
         payload_messages = [asdict(m) | {"content": m.content} for m in messages]
-        response = await self._client.chat_create(messages=payload_messages, tools=tools)
+        response = await self._client.chat_create(
+            messages=payload_messages, tools=tools
+        )
         return response
 
     async def stream(
-            self, messages: Iterable[ChatMessageModel], options: ChatOptionsModel,
+            self,
+            messages: Iterable[ChatMessageModel],
+            options: ChatOptionsModel,
             tools: List[FunctionCallToolModel],
     ) -> AsyncIterator[str]:
         payload_messages = [asdict(m) | {"content": m.content} for m in messages]

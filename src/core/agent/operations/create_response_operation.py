@@ -2,8 +2,13 @@ from wireup import AsyncContainer
 
 from core.agent.agent import Agent
 from core.agent.tool_cache import ToolCache
+
 from core.chat.client import ChatClient
+
 from core.code.tools.add_file import AddFile
+from core.code.tools.list_dir import ListDir
+from core.code.tools.modify_file import ModifyFile
+from core.code.tools.read_file import ReadFile
 
 
 class CreateAgentResponseOperation:
@@ -20,7 +25,7 @@ class CreateAgentResponseOperation:
         """
         agent = Agent(
             chat_client=self.client,
-            tools=ToolCache([AddFile]),
+            tools=ToolCache([AddFile, ModifyFile, ReadFile, ListDir]),
             container=self.container,
         )
 

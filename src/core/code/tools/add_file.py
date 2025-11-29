@@ -1,9 +1,11 @@
 import asyncio
 from pathlib import Path
 
+from loguru import logger
 from wireup import service
 
 from core.agent.interfaces import Tool
+
 
 @service
 class AddFile(Tool):
@@ -24,4 +26,5 @@ class AddFile(Tool):
 
             return f"File {file_name} added at {file_path}"
         except Exception as exc:
+            logger.error(f"Failed to add file {file_name} at {file_path}: {exc}")
             return f"Failed to add file {file_name} at {file_path}: {exc}"

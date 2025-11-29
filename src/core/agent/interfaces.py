@@ -5,5 +5,5 @@ class Tool(ABC):
     description: str
 
     @abstractmethod
-    async def execute_async(self, *args, **kwargs):
+    async def execute_async(self, *args, **kwargs) -> str:
         pass

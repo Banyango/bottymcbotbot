@@ -2,21 +2,26 @@ from typing import List, Dict, Type
 import inspect
 
 from core.agent.interfaces import Tool
-from core.chat.models import FunctionCallToolModel, FunctionModel, ParametersModel, PropertyModel
+from core.chat.models import (
+    FunctionCallToolModel,
+    FunctionModel,
+    ParametersModel,
+    PropertyModel,
+)
 
 
 def get_json_type_from_python_type(kind: str) -> str:
-    if kind == int:
+    if kind is int:
         return "integer"
-    elif kind == float:
+    elif kind is float:
         return "number"
-    elif kind == str:
+    elif kind is str:
         return "string"
-    elif kind == bool:
+    elif kind is bool:
         return "boolean"
-    elif kind == list:
+    elif kind is list:
         return "array"
-    elif kind == dict:
+    elif kind is dict:
         return "object"
     else:
         return "string"
@@ -45,18 +50,16 @@ def serialize_tool(tool: Type[Tool]) -> FunctionCallToolModel:
 
         params[name] = PropertyModel(
             type=get_json_type_from_python_type(kind),
-            description=f"The {name} parameter"
+            description=f"The {name} parameter",
         )
 
     return FunctionCallToolModel(
         type="function",
         function=FunctionModel(
-            name=type(tool).__name__,
+            name=tool.__name__,
             description=tool.description,
             parameters=ParametersModel(
-                type="object",
-                required=required,
-                properties=params
+                type="object", required=required, properties=params
             ),
         ),
     )
@@ -65,7 +68,7 @@ def serialize_tool(tool: Type[Tool]) -> FunctionCallToolModel:
 class ToolCache:
     def __init__(self, tools: List[Type[Tool]]):
         self._str_to_tool_map: Dict[str, Type[Tool]] = {
-            type(tool).__name__: tool for tool in tools
+            tool.__name__: tool for tool in tools
         }
         self._serialized_tools: List[FunctionCallToolModel] = [
             serialize_tool(tool) for tool in tools

@@ -39,14 +39,22 @@ class Agent:
                     function_name = tool_call.function.name
                     function_args = tool_call.function.arguments
 
-                    klass = await self.container.get(self.tools.get_tool_by_name(function_name))
+                    klass = await self.container.get(
+                        self.tools.get_tool_by_name(function_name)
+                    )
 
                     tool_response = await klass.execute_async(**function_args)
 
                     if tool_response is None:
                         tool_response = ""
 
-                    messages.append(ChatMessageModel(role="tool", content=tool_response or "", tool_name=function_name))
+                    messages.append(
+                        ChatMessageModel(
+                            role="tool",
+                            content=tool_response or "",
+                            tool_name=function_name,
+                        )
+                    )
             else:
                 return response.message.content or ""
 

@@ -1,4 +1,3 @@
-import sys
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -18,4 +17,3 @@ class PythonExecutor(ABC):
 
     @abstractmethod
     def __call__(self, code_action: str) -> CodeOutputModel: ...
-

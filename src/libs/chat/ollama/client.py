@@ -5,14 +5,9 @@ import ollama
 from wireup import service
 
 from core.chat.models import FunctionCallToolModel
+from libs.chat.ollama.config import OllamaAISettings
 from libs.chat.types import ChatResponse, Message
 from dataclasses import asdict, is_dataclass
-
-
-@service
-class OllamaAISettings:
-    base_url: str = "http://localhost:11434/"
-    model: str = "gpt-oss:20b"
 
 
 @service
@@ -22,9 +17,9 @@ class OllamaClient:
         self.model = config.model
 
     async def chat_create(
-            self,
-            messages: Sequence[Union[Mapping[str, Any], Message]],
-            tools: List[FunctionCallToolModel]
+        self,
+        messages: Sequence[Union[Mapping[str, Any], Message]],
+        tools: List[FunctionCallToolModel],
     ) -> ChatResponse:
         """
         Create a chat completion
@@ -36,7 +31,9 @@ class OllamaClient:
         prepared_messages = [asdict(m) if is_dataclass(m) else m for m in messages]
         prepared_tools = [asdict(t) if is_dataclass(t) else t for t in tools]
 
-        response = await self.client.chat(model=self.model, messages=prepared_messages, tools=prepared_tools)
+        response = await self.client.chat(
+            model=self.model, messages=prepared_messages, tools=prepared_tools
+        )
 
         return ChatResponse(
             message=Message(
@@ -44,15 +41,15 @@ class OllamaClient:
                 content=response.message.content,
                 thinking=response.message.thinking,
                 tool_name=response.message.tool_name,
-                tool_calls=response.message.tool_calls
+                tool_calls=response.message.tool_calls,
             ),
-            done=response.done
+            done=response.done,
         )
 
     async def chat_with_streaming_response(
-            self,
-            messages: Sequence[Union[Mapping[str, Any], Message]],
-            tools: List[FunctionCallToolModel]
+        self,
+        messages: Sequence[Union[Mapping[str, Any], Message]],
+        tools: List[FunctionCallToolModel],
     ):
         """
         Chat with streaming response
@@ -64,4 +61,9 @@ class OllamaClient:
         prepared_messages = [asdict(m) if is_dataclass(m) else m for m in messages]
         prepared_tools = [asdict(t) if is_dataclass(t) else t for t in tools]
 
-        return self.client.chat(stream=True, model=self.model, messages=prepared_messages, tools=prepared_tools)
+        return self.client.chat(
+            stream=True,
+            model=self.model,
+            messages=prepared_messages,
+            tools=prepared_tools,
+        )

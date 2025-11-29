@@ -29,17 +29,20 @@ class PropertyModel:
     type: str
     description: Optional[str]
 
+
 @dataclass
 class ParametersModel:
     type: Literal["object"]
     required: List[str]
     properties: Dict[str, PropertyModel]
 
+
 @dataclass
 class FunctionModel:
     name: str
     description: Optional[str]
     parameters: ParametersModel
+
 
 @dataclass
 class FunctionCallToolModel:

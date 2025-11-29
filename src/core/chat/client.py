@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterable, AsyncIterator, Dict, List
+from typing import Iterable, AsyncIterator, List
 
 from wireup import abstract
 
