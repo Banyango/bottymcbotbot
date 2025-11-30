@@ -11,6 +11,15 @@ from core.chat.models import (
 
 
 def get_json_type_from_python_type(kind: str) -> str:
+    """
+    Map Python types to JSON schema types.
+
+    Args:
+        kind (str): The Python type.
+
+    Returns:
+        str: The corresponding JSON schema type.
+    """
     if kind is int:
         return "integer"
     elif kind is float:
@@ -28,11 +37,13 @@ def get_json_type_from_python_type(kind: str) -> str:
 
 
 def serialize_tool(tool: Type[Tool]) -> FunctionCallToolModel:
-    """
-    Serialize a Tool into a FunctionCallToolModel.
+    """Serialize a Tool into a FunctionCallToolModel.
 
     Args:
         tool (Tool): The tool to serialize.
+
+    Returns:
+        FunctionCallToolModel: The serialized tool.
     """
     signature = inspect.signature(tool.execute_async)
 
@@ -65,7 +76,7 @@ def serialize_tool(tool: Type[Tool]) -> FunctionCallToolModel:
     )
 
 
-class ToolCache:
+class ToolsProvider:
     def __init__(self, tools: List[Type[Tool]]):
         self._str_to_tool_map: Dict[str, Type[Tool]] = {
             tool.__name__: tool for tool in tools
@@ -75,9 +86,22 @@ class ToolCache:
         ]
 
     def get_tools(self) -> List[FunctionCallToolModel]:
+        """Get the serialized tools.
+
+        Returns:
+            List[FunctionCallToolModel]: The list of serialized tools.
+        """
         return self._serialized_tools
 
     def get_tool_by_name(self, name: str) -> Optional[Type[Tool]]:
+        """Get a tool class by its name
+
+        Args:
+            name (str): The name of the tool.
+
+        Returns:
+            Optional[Type[Tool]]: The tool class if found, else None.
+        """
         if name not in self._str_to_tool_map:
             return None
 

@@ -1,17 +1,16 @@
 import json
-from string import Template
-from typing import List, Dict, Any
+from typing import List
 
 import aiofiles
 from wireup import service
 
-from core.agent.memory import MemoryService
+from core.agent.interfaces import AgentMemoryService
 from core.chat.models import ChatMessageModel
 
 
 @service
-class DebuggingMemoryService(MemoryService):
-    async def create_initial_messages(self, message_input: str, system_prompt: str, context: Dict[str, Any]) -> List[ChatMessageModel]:
+class DebuggingAgentMemoryService(AgentMemoryService):
+    async def load_messages(self) -> List[ChatMessageModel] | None:
         try:
             async with aiofiles.open("agent_memory.json", "r", encoding="utf-8") as f:
                 content = await f.read()
@@ -22,15 +21,10 @@ class DebuggingMemoryService(MemoryService):
                 ]
                 return messages
         except FileNotFoundError:
-            return [
-                ChatMessageModel(role="system", content=Template(system_prompt).substitute(context)),
-                ChatMessageModel(role="user", content=message_input)
-            ]
+            return None
 
     async def save_messages(self, messages: List[ChatMessageModel]):
-        memory = {
-            "messages": [message.__dict__ for message in messages]
-        }
+        memory = {"messages": [message.__dict__ for message in messages]}
 
         async with aiofiles.open("agent_memory.json", "w", encoding="utf-8") as f:
             # json.dumps is synchronous but small; write asynchronously

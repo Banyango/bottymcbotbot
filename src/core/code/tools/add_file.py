@@ -13,7 +13,9 @@ from core.code.services import FileService
 class AddFile(Tool):
     description = "Adds a file to the specified directory."
 
-    async def execute_async(self, file_path: str, file_name: str, context: Dict[str, Any]) -> str:
+    async def execute_async(
+        self, file_path: str, file_name: str, context: Dict[str, Any]
+    ) -> str:
         """Create the directory (if needed) and touch the target file.
 
         Args:

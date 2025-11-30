@@ -3,7 +3,7 @@ from typing import Any
 
 from wireup import abstract
 
-from core.agent.tool_cache import Tool
+from core.agent.providers import Tool
 from core.code.models import CodeOutputModel
 
 

@@ -1,4 +1,4 @@
-from core.agent.tool_cache import ToolCache
+from core.agent.providers import ToolsProvider
 from core.agent.interfaces import Tool
 
 
@@ -19,7 +19,7 @@ class FakeTool(Tool):
 
 def test_get_tools_should_return_serialized_tool():
     # Arrange
-    tool_cache = ToolCache([FakeTool])
+    tool_cache = ToolsProvider([FakeTool])
 
     # Act
     tools = tool_cache.get_tools()
@@ -44,7 +44,7 @@ def test_get_tools_should_return_serialized_tool():
 
 def test_get_tool_by_name_should_return_tool_when_name_is_valid():
     # Arrange
-    tool_cache = ToolCache([FakeTool])
+    tool_cache = ToolsProvider([FakeTool])
 
     # Act
     tools = tool_cache.get_tool_by_name("FakeTool")
@@ -55,7 +55,7 @@ def test_get_tool_by_name_should_return_tool_when_name_is_valid():
 
 def test_get_tool_by_name_should_raise_key_error_when_name_is_invalid():
     # Arrange
-    tool_cache = ToolCache([FakeTool])
+    tool_cache = ToolsProvider([FakeTool])
 
     # Act / Assert
     try:

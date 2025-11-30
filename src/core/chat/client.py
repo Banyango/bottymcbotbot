@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Iterable, AsyncIterator, List
+from typing import Iterable, AsyncIterator, List, Optional
 
 from wireup import abstract
 
@@ -14,7 +14,7 @@ class ChatClient(ABC):
         self,
         messages: Iterable[ChatMessageModel],
         options: ChatOptionsModel,
-        tools: List[FunctionCallToolModel],
+        tools: Optional[List[FunctionCallToolModel]],
     ) -> ChatResponse:
         pass
 
@@ -23,6 +23,6 @@ class ChatClient(ABC):
         self,
         messages: Iterable[ChatMessageModel],
         options: ChatOptionsModel,
-        tools: List[FunctionCallToolModel],
+        tools: Optional[List[FunctionCallToolModel]],
     ) -> AsyncIterator[str]:
         pass

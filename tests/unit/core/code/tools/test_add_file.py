@@ -36,8 +36,9 @@ async def test_execute_returns_error_when_path_outside_project_root():
     tool = AddFile(file_service=mock_fs)
 
     # Act
-    result = await tool.execute_async("/some/path", "file.txt", {"project_root": "/project"})
+    result = await tool.execute_async(
+        "/some/path", "file.txt", {"project_root": "/project"}
+    )
 
     # Assert
     assert "outside of project root" in result
-

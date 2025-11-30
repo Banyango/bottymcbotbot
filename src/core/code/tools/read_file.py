@@ -22,7 +22,9 @@ class ReadFile(Tool):
         target = Path(context["project_root"]) / Path(file_path)
         try:
             content = await asyncio.to_thread(target.read_text, encoding="utf-8")
-            return content
+            return f"""
+ReadFile - file_path: {file_path}
+{content}"""
         except Exception as exc:
             logger.error(f"Failed to read file {file_path}: {exc}")
             return f"Failed to read file {file_path}: {exc}"

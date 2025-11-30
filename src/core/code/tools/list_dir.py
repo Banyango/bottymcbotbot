@@ -30,7 +30,10 @@ class ListDir(Tool):
             entries = await asyncio.to_thread(
                 lambda: [p.name for p in target.iterdir()]
             )
-            return "\n".join(entries)
+            return f"""
+ListDir at {file_path}:
+{', '.join(entries)}
+"""
         except Exception as exc:
             logger.error(f"Failed to list directory at {file_path}: {exc}")
             return f"Failed to list directory at {file_path}: {exc}"

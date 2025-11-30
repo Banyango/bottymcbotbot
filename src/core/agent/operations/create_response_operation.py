@@ -3,8 +3,8 @@ from typing import Any, Dict
 from wireup import AsyncContainer
 
 from core.agent.agent import Agent
-from core.agent.memory import MemoryService
-from core.agent.tool_cache import ToolCache
+from core.agent.interfaces import AgentMemoryService
+from core.agent.providers import ToolsProvider
 
 from core.chat.client import ChatClient
 
@@ -15,7 +15,12 @@ from core.code.tools.read_file import ReadFile
 
 
 class CreateAgentResponseOperation:
-    def __init__(self, client: ChatClient, container: AsyncContainer, memory_service: MemoryService):
+    def __init__(
+        self,
+        client: ChatClient,
+        container: AsyncContainer,
+        memory_service: AgentMemoryService,
+    ):
         self.client = client
         self.container = container
         self.memory_service = memory_service
@@ -52,7 +57,7 @@ class CreateAgentResponseOperation:
         agent = Agent(
             chat_client=self.client,
             container=self.container,
-            tools=ToolCache([AddFile, ModifyFile, ReadFile, ListDir]),
+            tools=ToolsProvider([AddFile, ModifyFile, ReadFile, ListDir]),
             system_prompt=system_prompt,
             memory=self.memory_service,
         )

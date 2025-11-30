@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from typing import Literal, Optional, Dict, Any, List
+from typing import Literal, Optional, Dict, Any, List, Union
+
+from pydantic.json_schema import JsonSchemaValue
 
 Role = Literal["system", "user", "assistant", "tool"]
 
@@ -8,6 +10,7 @@ Role = Literal["system", "user", "assistant", "tool"]
 class ChatMessageModel:
     role: Role
     content: str
+    thinking: Optional[str] = None
     name: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
     tool_name: Optional[str] = None
@@ -21,6 +24,8 @@ class ChatOptionsModel:
     top_p: Optional[float] = None
     presence_penalty: Optional[float] = None
     frequency_penalty: Optional[float] = None
+    format: Optional[Union[Literal["", "json"], JsonSchemaValue]] = None
+    think: Optional[bool] = None
     stop: Optional[List[str]] = None
 
 

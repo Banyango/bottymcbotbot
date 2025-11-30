@@ -41,7 +41,9 @@ class ModifyFile(Tool):
                 except Exception:
                     pass
 
-    async def execute_async(self, file_path: str, new_content: str, context: Dict[str, Any]) -> str:
+    async def execute_async(
+        self, file_path: str, new_content: str, context: Dict[str, Any]
+    ) -> str:
         """Atomically replace the contents of `file_path` with `new_content`.
 
         Args:
@@ -53,7 +55,7 @@ class ModifyFile(Tool):
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
             await asyncio.to_thread(self._write_atomic, path, new_content)
-            return f"File {file_path} modified"
+            return f"ModifyFile - file_path = {file_path} updated to {new_content}"
         except Exception as exc:
             logger.error(f"Failed to modify file {file_path}: {exc}")
             return f"Failed to modify file {file_path}: {exc}"

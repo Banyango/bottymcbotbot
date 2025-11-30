@@ -19,7 +19,12 @@ def test_is_path_within_dir_treat_target_as_file_with_nonexistent_file_inside_ba
         # target includes a filename that does not (yet) exist
         target_file = base / "some" / "new.txt"
 
-        assert FileService.is_path_within_dir(str(base), str(target_file), treat_target_as_file=True) is True
+        assert (
+            FileService.is_path_within_dir(
+                str(base), str(target_file), treat_target_as_file=True
+            )
+            is True
+        )
 
 
 def test_is_path_within_dir_returns_false_for_outside_path():
@@ -36,4 +41,3 @@ def test_is_path_within_dir_same_path_returns_true():
         base = Path(tmpdir)
         # same path should be considered within
         assert FileService.is_path_within_dir(str(base), str(base)) is True
-

@@ -24,7 +24,9 @@ async def test_execute_modifies_file_when_input_is_valid():
         new_content = "new content"
 
         # Act
-        result = await tool.execute_async(str(file_path), new_content, {"project_root": tmpdir})
+        result = await tool.execute_async(
+            str(file_path), new_content, {"project_root": tmpdir}
+        )
 
         # Assert
         assert "modified" in result
@@ -44,7 +46,9 @@ async def test_execute_creates_parent_and_writes_when_parent_missing():
         new_content = "created content"
 
         # Act
-        result = await tool.execute_async(str(file_path), new_content, {"project_root": tmpdir})
+        result = await tool.execute_async(
+            str(file_path), new_content, {"project_root": tmpdir}
+        )
 
         # Assert
         assert "modified" in result
@@ -60,8 +64,9 @@ async def test_execute_returns_error_when_path_outside_project_root():
     tool = ModifyFile(file_service=mock_fs)
 
     # Act
-    result = await tool.execute_async("/tmp/file.txt", "x", {"project_root": "/project"})
+    result = await tool.execute_async(
+        "/tmp/file.txt", "x", {"project_root": "/project"}
+    )
 
     # Assert
     assert "outside of project root" in result
-

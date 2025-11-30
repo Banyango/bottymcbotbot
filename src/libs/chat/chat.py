@@ -1,5 +1,5 @@
 from dataclasses import asdict
-from typing import Iterable, AsyncIterator, List
+from typing import Iterable, AsyncIterator, List, Optional
 
 from wireup import service
 
@@ -15,26 +15,26 @@ class MultiModelChatClient(ChatClient):
         self._client = client
 
     async def chat(
-            self,
-            messages: Iterable[ChatMessageModel],
-            options: ChatOptionsModel,
-            tools: List[FunctionCallToolModel],
+        self,
+        messages: Iterable[ChatMessageModel],
+        options: ChatOptionsModel,
+        tools: Optional[List[FunctionCallToolModel]],
     ) -> ChatResponse:
         payload_messages = [asdict(m) | {"content": m.content} for m in messages]
         response = await self._client.chat_create(
-            messages=payload_messages, tools=tools
+            messages=payload_messages, tools=tools, format=options.format
         )
         return response
 
     async def stream(
-            self,
-            messages: Iterable[ChatMessageModel],
-            options: ChatOptionsModel,
-            tools: List[FunctionCallToolModel],
+        self,
+        messages: Iterable[ChatMessageModel],
+        options: ChatOptionsModel,
+        tools: Optional[List[FunctionCallToolModel]],
     ) -> AsyncIterator[str]:
         payload_messages = [asdict(m) | {"content": m.content} for m in messages]
         async with self._client.chat_with_streaming_response(
-                messages=payload_messages, tools=tools
+            messages=payload_messages, tools=tools
         ) as stream:
             for event in stream.iter_lines():
                 yield event
