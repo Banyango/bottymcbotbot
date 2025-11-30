@@ -1,4 +1,4 @@
-from typing import List, Dict, Type
+from typing import List, Dict, Type, Optional
 import inspect
 
 from core.agent.interfaces import Tool
@@ -42,7 +42,7 @@ def serialize_tool(tool: Type[Tool]) -> FunctionCallToolModel:
         name = parameter.name
         kind = parameter.annotation
 
-        if name == "self":
+        if name == "self" or name == "context":
             continue
 
         if parameter.default == inspect.Parameter.empty:
@@ -77,5 +77,8 @@ class ToolCache:
     def get_tools(self) -> List[FunctionCallToolModel]:
         return self._serialized_tools
 
-    def get_tool_by_name(self, name: str) -> Type[Tool]:
+    def get_tool_by_name(self, name: str) -> Optional[Type[Tool]]:
+        if name not in self._str_to_tool_map:
+            return None
+
         return self._str_to_tool_map[name]

@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from typing import Dict, Any
 
 from loguru import logger
 from wireup import service
@@ -8,10 +9,15 @@ from core.agent.interfaces import Tool
 import os
 import tempfile
 
+from core.code.services import FileService
+
 
 @service
 class ModifyFile(Tool):
     description = "Modify a file."
+
+    def __init__(self, file_service: FileService):
+        self.file_service = file_service
 
     @staticmethod
     def _write_atomic(path: Path, new_content: str) -> None:
@@ -35,15 +41,15 @@ class ModifyFile(Tool):
                 except Exception:
                     pass
 
-    async def execute_async(self, file_path: str, new_content: str) -> str:
+    async def execute_async(self, file_path: str, new_content: str, context: Dict[str, Any]) -> str:
         """Atomically replace the contents of `file_path` with `new_content`.
 
-        Creates parent directories if they don't exist. The actual file write is
-        performed in a thread to avoid blocking the event loop. A temporary file
-        is created in the same directory and then atomically moved into place
-        using os.replace.
+        Args:
+            file_path (str): The full path to the file to be modified.
+            new_content (str): The new content to write to the file.
+            context (Dict[str, Any]): Additional context for the operation.
         """
-        path = Path(file_path)
+        path = Path(context["project_root"]) / Path(file_path)
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
             await asyncio.to_thread(self._write_atomic, path, new_content)

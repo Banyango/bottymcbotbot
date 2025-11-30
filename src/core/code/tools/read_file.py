@@ -1,5 +1,6 @@
 import asyncio
 from pathlib import Path
+from typing import Dict, Any
 
 from loguru import logger
 from wireup import service
@@ -11,17 +12,17 @@ from core.agent.interfaces import Tool
 class ReadFile(Tool):
     description = "Reads the contents of a specified file."
 
-    async def execute_async(self, file_path: str, file_name: str) -> str:
+    async def execute_async(self, file_path: str, context: Dict[str, Any]) -> str:
         """Read and return the contents of the specified file.
 
-        This implementation uses pathlib.Path.read_text executed in a thread to avoid
-        blocking the event loop on filesystem IO.
+        Args:
+            file_path (str): The directory path where the file is located.
+            context (Dict[str, Any]): Additional context for the operation.
         """
-        target = Path(file_path) / file_name
+        target = Path(context["project_root"]) / Path(file_path)
         try:
-            # Run the blocking read_text in a thread
             content = await asyncio.to_thread(target.read_text, encoding="utf-8")
             return content
         except Exception as exc:
-            logger.error(f"Failed to read file {file_name} at {file_path}: {exc}")
-            return f"Failed to read file {file_name} at {file_path}: {exc}"
+            logger.error(f"Failed to read file {file_path}: {exc}")
+            return f"Failed to read file {file_path}: {exc}"
