@@ -12,8 +12,8 @@ from dataclasses import asdict, is_dataclass
 from ollama import Message as OllamaMessage, Tool as OllamaTool
 
 
-@service(qualifier="ollama")
-class OllamaClient:
+@service
+class OllamaAdapter:
     def __init__(self, config: OllamaAISettings):
         self.client = ollama.AsyncClient(config.base_url)
         self.model = config.model

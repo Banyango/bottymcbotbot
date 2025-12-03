@@ -42,7 +42,7 @@ class AgentPlanService:
             ],
             tools=None,
             options=ChatOptionsModel(
-                model="gpt-os:20b", temperature=0.7, format=Plan.model_json_schema()
+                temperature=0.7, format=Plan.model_json_schema()
             ),
         )
 

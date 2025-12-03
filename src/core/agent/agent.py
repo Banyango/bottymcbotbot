@@ -52,7 +52,6 @@ class Agent:
                 messages=messages,
                 tools=self.tools.get_tools(),
                 options=ChatOptionsModel(
-                    model="gpt-os:20b",
                     temperature=0.7,
                 ),
             )
@@ -69,6 +68,7 @@ class Agent:
                     if klass_name is None:
                         messages.append(
                             ChatMessageModel(
+                                tool_call_id=tool_call.id,
                                 role="tool",
                                 content=f"Tool {function_name} not found.",
                                 tool_name=function_name,
@@ -93,6 +93,7 @@ class Agent:
                     if missing_params:
                         messages.append(
                             ChatMessageModel(
+                                tool_call_id=tool_call.id,
                                 role="tool",
                                 content=f"Tool {function_name} missing required arguments.",
                                 tool_name=function_name,
@@ -112,6 +113,7 @@ class Agent:
                     messages.append(
                         ChatMessageModel(
                             role="tool",
+                            tool_call_id=tool_call.id,
                             thinking=response.message.thinking,
                             content=tool_response or "",
                             tool_name=function_name,
@@ -148,7 +150,6 @@ class Agent:
                 )
             ],
             options=ChatOptionsModel(
-                model="gpt-os:20b",
                 temperature=0.0,
             ),
             tools=None,

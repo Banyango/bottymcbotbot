@@ -10,6 +10,7 @@ Role = Literal["system", "user", "assistant", "tool"]
 class ChatMessageModel:
     role: Role
     content: str
+    tool_call_id: Optional[str] = None
     thinking: Optional[str] = None
     name: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
@@ -18,7 +19,6 @@ class ChatMessageModel:
 
 @dataclass
 class ChatOptionsModel:
-    model: str
     temperature: Optional[float] = None
     max_tokens: Optional[int] = None
     top_p: Optional[float] = None
