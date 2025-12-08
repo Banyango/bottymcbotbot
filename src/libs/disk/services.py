@@ -6,11 +6,18 @@ from wireup import service
 
 from core.interfaces.memory import AgentMemoryService
 from core.chat.models import ChatMessageModel
+from libs.disk.config import MemoryConfig
 
 
 @service
 class DebuggingAgentMemoryService(AgentMemoryService):
-    async def load_messages(self) -> List[ChatMessageModel]:
+    def __init__(self, config: MemoryConfig):
+        self._use_memory = config.use_memory
+
+    async def load_messages(self) -> List[ChatMessageModel] | None:
+        if not self._use_memory:
+            return None
+
         try:
             async with aiofiles.open("agent_memory.json", "r", encoding="utf-8") as f:
                 content = await f.read()
@@ -21,10 +28,13 @@ class DebuggingAgentMemoryService(AgentMemoryService):
                 ]
                 return messages
         except FileNotFoundError:
-            return []
+            return None
 
     async def save_messages(self, messages: List[ChatMessageModel]):
-        memory = {"messages": [message.__dict__ for message in messages]}
+        if not self._use_memory:
+            return
+
+        memory = {"messages": [message.model_dump() for message in messages]}
 
         async with aiofiles.open("agent_memory.json", "w", encoding="utf-8") as f:
             # json.dumps is synchronous but small; write asynchronously

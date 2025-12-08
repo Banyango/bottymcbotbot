@@ -13,5 +13,5 @@ class AgentMemoryService(ABC):
         pass
 
     @abstractmethod
-    async def load_messages(self) -> List[ChatMessageModel]:
+    async def load_messages(self) -> List[ChatMessageModel] | None:
         pass

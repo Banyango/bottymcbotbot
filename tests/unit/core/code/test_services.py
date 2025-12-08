@@ -63,3 +63,20 @@ def test_validate_file_path_should_respond_with_error_when_path_is_absolute():
     assert result is not None
     assert "Absolute paths are not allowed." in result.error_message
     assert result.tool_name == "test"
+
+
+def test_validate_file_path_should_pass_when_should_exist_false_and_nested_sub_dir_does_not_exist():
+    # Arrange
+    tool = FileService()
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # Act
+        result = tool.validate_file_path(
+            tool_name="test",
+            file_path="subdir1/subdir2/",
+            project_root=tmpdir,
+            target_type="dir",
+            should_exist=False,
+        )
+
+        # Assert
+        assert result is None

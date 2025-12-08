@@ -38,7 +38,7 @@ class Agent:
             context (Dict[str, Any]): Additional context for the agent that will be passed to all tools.
         """
         messages = await self.memory.load_messages()
-        if messages is None:
+        if messages is None or len(messages) == 0:
             messages = [
                 ChatMessageModel(role="system", content=self.system_prompt),
                 ChatMessageModel(role="user", content=message_input),
@@ -148,8 +148,7 @@ class Agent:
     async def check_if_request_is_done(self, messages: List[ChatMessageModel]) -> bool:
         is_done_system_prompt = (
             "$messages\n"
-            "Based on the previous conversation, has the user's request been fully addressed? Respond with 'yes' or 'no'."
-            "\n".join([f"{m.content}" for m in messages])
+            "Based on the conversation summary provided, has the user's request been fully addressed? Respond with 'yes' or 'no'."
         )
 
         response = await self.chat_client.chat(
@@ -157,6 +156,16 @@ class Agent:
                 ChatMessageModel(
                     role="system",
                     content=is_done_system_prompt,
+                ),
+                ChatMessageModel(
+                    role="user",
+                    content="Here is the conversation summary:\n"
+                    + "\n".join(
+                        [
+                            f"{msg.role.capitalize()}: {msg.content}"
+                            for msg in messages
+                        ]
+                    ),
                 )
             ],
             options=ChatOptionsModel(

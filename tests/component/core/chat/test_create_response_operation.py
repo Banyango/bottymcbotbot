@@ -31,7 +31,7 @@ async def test_create_response_operation():
     # Act
     response = await _sut.execute_async(
         """
-        Create a unit test for src/libs/disk/services.py it should go into tests/libs/disk/test_services.py
+        Create a unit test for src/libs/disk/services.py it should go into tests/unit/libs/disk/test_services.py
         """,
         context={"project_root": os.path.abspath(".")},
     )

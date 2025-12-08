@@ -132,7 +132,7 @@ class ChatMessageModel(BaseModel):
     tool_calls: Optional[List[FunctionCallResponseModel]] = None
     """The list of tool calls made in this message, if any."""
 
-    thinking: Optional[str] = None
+    thinking: Optional[str | bytes] = None
     """The thinking content of the message, if any."""
 
     name: Optional[str] = None
