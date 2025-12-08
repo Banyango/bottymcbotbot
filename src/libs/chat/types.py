@@ -13,14 +13,24 @@ class Function:
     arguments: Mapping[str, Any]
     "Arguments of the function."
 
+    def __init__(self, name: str, arguments: Mapping[str, Any]):
+        self.name = name
+        self.arguments = arguments
+
 
 class ToolCall:
     """
     Model tool calls.
     """
 
+    id: Optional[str] = None
+
     function: Function
     "Function to be called."
+
+    def __init__(self, function: Function, id: Optional[str] = None):
+        self.function = function
+        self.id = id
 
 
 @dataclass
