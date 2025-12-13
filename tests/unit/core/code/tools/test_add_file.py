@@ -21,12 +21,12 @@ async def test_execute_adds_file_when_input_is_valid():
         context = CodeContext(project_root=tmpdir)
 
         # Act
-        result = await tool.execute_async(file_path, file_name, context)
+        result = await tool.execute_async(file_path, file_name, "contents", context)
 
         # Assert
         target = Path(file_path) / file_name
         assert target.exists(), "Expected the file to be created on disk"
-        assert result == f"File {file_name} added at {file_path}"
+        assert result == f"File {file_name} added at {file_path} and added the contents."
 
 
 @pytest.mark.asyncio
@@ -43,7 +43,7 @@ async def test_execute_returns_error_when_path_outside_project_root():
 
     # Act
     result = await tool.execute_async(
-        "/some/path", "file.txt", {"project_root": "/project"}
+        "/some/path", "file.txt", "contents", {"project_root": "/project"}
     )
 
     # Assert
@@ -65,9 +65,9 @@ async def test_execute_should_add_file_when_sub_dir_doesnt_exist():
         context = CodeContext(project_root=tmpdir)
 
         # Act
-        result = await tool.execute_async(file_path, file_name, context)
+        result = await tool.execute_async(file_path, file_name, "contents", context)
 
         # Assert
         target = Path(tmpdir) / file_path / file_name
         assert target.exists(), "Expected the file to be created on disk"
-        assert result == f"File {file_name} added at {file_path}"
+        assert result == f"File {file_name} added at {file_path} and added the contents."
